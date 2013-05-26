@@ -1,0 +1,141 @@
+# sobelow2.pl
+# v0.01, 2003/3/27 02:39PM by Ray
+# v0.02, 2003/4/2 05:06PM by Ray
+
+require "so_below.cfg";
+
+$vol=shift;
+$vol=uc($vol);
+mkdir($out_dir, MODE);
+mkdir("$out_dir/$vol", MODE);
+
+$xml='';
+
+$f="$log_dir/star_${vol}b.txt";
+open I, $f or die;
+$f="$log_dir/star_${vol}d.txt";
+open LOG, ">$f" or die;
+while (<I>) {
+	chomp;
+	if (/^T.*xml$/) {
+		$xml_file = $_;
+		readXML();
+		print XO $xml;
+		close XO;
+		open XO, ">$out_dir/$vol/$xml_file" or die;
+	} elsif (/^(fx.*?)##(<app.*?)<lem>(.*?)<\/lem>(.*)$/) {
+		$anchorID=$1;
+		$appOpenTag=$2;
+		$lem=$3;
+		$rdg=$4;
+		print LOG "\n\n30 $anchorID\n";
+		if ($xml =~ /^(.*?)<anchor id="$anchorID"\/>(.*)$/s) {
+			print XO $1;
+			$xml=$2;
+			$insert='';
+			if (insertLem()) {
+				#print LOG "[36]";
+				print XO $appOpenTag;
+				print XO "<lem>";
+				print XO $insert;
+				print XO "</lem>";
+				print XO $rdg;
+			} else {
+				print XO "<anchor id=\"$anchorID\"/>";
+				print XO $insert;
+			}
+		} else {
+			die;
+		}
+	}
+}
+close I;
+close XO;
+
+sub readXML {
+	print STDERR "$xml_file\n";
+	open XI, "$in_dir/$vol/$xml_file" or die;
+	$xml='';
+	while (<XI>) {
+		$xml.=$_;
+	}
+	close XI;
+	open LC, "$log_dir/star_${vol}c.txt" or die;
+	while (<LC>) {
+		chomp;
+		if (/$xml_file/) { 
+			last;
+		}
+	}
+	starTodo($_);
+	while (<LC>) {
+		chomp;
+		if (/$xml_file/) {
+			starTodo($_);
+		} else {
+			last;
+		}
+	}
+	close LC;
+}
+
+sub starTodo {
+	$s=shift;
+	($f,$n)=split / /,$s;
+	#print STDERR "81 s=[$s] n=[$n]\n";
+
+	# 除了 > 之外的 big5 字元
+	$b5 = "(?:[\x21-\x3d]|[\x3f-\x7f]|[\x80-\xff].)";
+	
+	if ($xml=~ /^(.*<note$b5*?n=\"$n\"$b5*?type=\"mod\"$b5*?>)(.*?<\/note>.*$)/s) {
+		$xml = $1 . '<todo type="＊"/>' . $2;
+	} elsif ($xml=~ /^(.*)(<note$b5*?n=\"$n\"$b5*?type=\")orig(\"$b5*?>)(.*?<\/note>)(.*)$/s) {
+		$xml = $1 . $2 . 'orig' . $3 . $4 . $2 . 'mod' . $3 . $4 . $5;
+	} else {
+		print LOG "93 $xml_file $f $n\n";
+	}
+}
+
+sub insertLem {
+	my $big5 = "(?:<corr.*?sic=\".*?\".*?>.*?<\/corr>|<.*?>|&.*?;|[\x00-\x7f]|[\x80-\xff][\x00-\xff])";
+	print LOG "\n99 lem=[$lem]\n";
+	while ($lem=~/^($big5)(.*?)$/s) {
+		$c1=$1;
+		#print LOG "[58$c1]";
+		if ($c1=~/^<corr.*?sic="(.*?)".*?>.*?<\/corr>/) {
+			$sic=$1;
+			$corrFlag=1;
+		} else {
+			$corrFlag=0;
+		}
+		$lem=$2;
+		while ($xml=~/^($big5)(.*?)$/s) {
+			$c2=$1;
+			$xml=$2;
+			#print LOG "[62$c2]";
+			if ($corrFlag) {
+				if ($c2 eq $sic) {
+					$insert .= $c1;
+					last;
+				} elsif ($c2=~/^</ or $c2 eq "\n") {
+					$insert .= $c2;
+				} else {
+					$insert .= $c2;
+					print LOG "87 $anchorID $appOpenTag c1=[$c1] c2=[$c2]\n";
+					return 0;
+				}
+			} else {
+				$insert .= $c2;
+				if ($c2 eq $c1) {
+					last;
+				} elsif ($c2 eq "\n") {
+				} elsif ($c2 !~ /^</) {
+					print LOG "95 $anchorID $appOpenTag c1=[$c1] c2=[$c2]\n";
+					return 0;
+				}
+			}
+		}
+	}
+	#print LOG "[137]";
+	return 1;
+}

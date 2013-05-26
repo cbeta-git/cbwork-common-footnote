@@ -1,0 +1,142 @@
+T31 校勘條目 <oo> 原始檔修訂記錄
+
+（20020429 by saywhat)
+============================================================
+{{rd修訂||old}}
+
+p0700  04 （（大乘…第一））十二字＝（（對法論第一卷））六字{{【聖】||}}
+p0646  11 酪{{.||,}} Dadhi.
+p0526{{#|| }} 03 雜＝新【聖】
+============================================================
+
+
+
+（20020516 by saywhat)
+============================================================
+{{rd修訂||old}}
+
+p0060
+  08 識所變{{||。}} Vij~naana-pari.naama.
+  09 能變{{||。}} Pari.naama.
+  10 異熟{{||。}} Vipaaka.
+  11 思量{{||。}} Manana.
+  12 了別境識{{||。}} Vi.saya-vij~napti.
+  14 阿賴耶識{{||。}} AAlaya-vij~naana.
+  15 一切種{{||。}} Sarva-viijaka.
+  16 不可知{{||。}} Asa^mviditaka.
+  17 執受{{||。}} Upaadi.
+  18 處{{||。}} Sthaana.
+  19 了（別）{{||。}} Vij~naptika.
+  20 觸{{||。}} Spar`sa.
+  21 作意{{||。}} Manaskaara.
+  22 受{{||。}} Vit(vedanaa).
+  23 想{{||。}} Sa^mj~naa.
+  24 思{{||。}} Cetanaa.
+  25 捨{{||。}} Upek.saa.
+  26 無覆無記{{||。}} Artiv.rtyaak.rta.
+  28 捨{{||。}} Vyaav.rtti.
+  30 末那{{||。}} Manas.
+  31 我癡{{||。}} AAtma-moha.
+  32 我見{{||。}} AAtma-d.r.s.ti.
+  33 我慢{{||。}} AAtma-maana.
+  34 我愛{{||。}} AAtma-sneha.
+  35 有覆無記{{||。}} Nivrtaavyaakrta.
+  36 滅定{{||。}} Nirodha-samaapatti.
+  37 出世道{{||。}} Lokottara-maarga.
+  38 了境{{||。}} Vi.saya-upalabdhi.
+  39 心所{{||。}} Caitasa.
+  40 遍行{{||。}} Sarvatraga.
+  41 別境{{||。}} Viniyata.
+  42 善{{||。}} Ku`sala.
+  43 煩惱{{||。}} Kle`sa.
+  44 隨煩惱{{||。}} Upakle`sa.
+  45 欲{{||。}} Chanda.
+  46 勝解{{||。}} Abhimok.sa.
+  47 念{{||。}} Sm.rti.
+  48 定{{||。}} Samaadhi.
+  49 慧{{||。}} Dhii(praj~naa).
+  50 信{{||。}} `Sraddhaa.
+  51 慚{{||。}} Hrii.
+  52 愧{{||。}} Apatrapaa.
+  53 無貪{{||。}} Alobha，無瞋{{||。}} Adve`sa，無癡{{||。}} Amoha.
+  54 勤{{||。}} Viirya.
+  55 安（輕安）{{||。}} Pra`srabdhi.
+  56 不放逸行{{||。}} Apramaada.
+  57 捨{{||。}} (upek.saa)
+  58 不害{{||。}} Ahi^msaa.
+  59 貪{{||。}} Raaga.
+  60 瞋{{||。}} Pratigha.
+  61 癡{{||。}} Muu.dha.
+  62 慢{{||。}} Maana.
+  63 疑{{||。}} Vicikitsaa.
+  64 惡見{{||。}} D.r`s(mithyaa d.r.s.ti).
+  65 忿{{||。}} Krodha.
+  66 恨{{||。}} Upanaaha.
+  67 覆{{||。}} Mrak.sa.
+  68 惱{{||。}} Pradaa`sa.
+  69 嫉{{||。}} II.r.syaa.
+  70 慳{{||。}} Maatsarya.
+  71 誑{{||。}} `Saa.thya.
+  72 諂{{||。}} (maayaa).
+  73 害{{||。}} Vihi^msaa.
+  74 憍{{||。}} Mada.
+  75 無慚{{||。}} AAhrii(aahriikya).
+  76 無愧{{||。}} Atrapaa(anapatrapaaya).
+  77 掉舉{{||。}} Auddhatya.
+  78 惛＝昏【三】【宮】，惛沈{{||。}} Styaana.
+  80 懈怠{{||。}} Kau`siidya.
+  81 放逸{{||。}} Pramaada.
+  82 失念{{||。}} Mu.s.ta-sm.r.tati.
+  83 散亂{{||。}} Vik.sepa.
+  84 不正知{{||。}} Asamprajanya.
+  85 悔（惡作）{{||。}} Kauk.rtya.
+  86 眠{{||。}} Middha.
+  87 尋{{||。}} Vitarka.
+  88 伺{{||。}} Vicaara.
+  89 根本識{{||。}} Muula-vij~naana
+  90 意識{{||。}} Manas.
+  91 無想天{{||。}} AAsa^mj~nika.
+  92 無心二定（無想定）{{||。}} Asa^mj~ni-samaapatti.（滅盡定）{{||。}} nirodha-samaapatti.
+  93 睡眠{{||。}} (acittaka).
+  94 悶絕{{||。}} Muurcchaa.
+
+p0061
+  02 分別{{||。}} Vikalpa.
+  03 唯識{{||。}} Vij~napti-maatraka.
+  04 展轉力{{||。}} Anyo'nyava`sa.
+  05 業習氣{{||。}} Karma-vaa`sanaa.
+  06 二取{{||。}} Graahadvaya（我執習氣{{||。}} graahya-graaha，名言習氣{{||。}} graahaka-graaha）.
+  07 遍計所執{{||。}} Parikalpita.
+  08 自性{{||。}} Svabhaava.
+  09 依他起自性{{||。}} Paratantra-svabhaava.
+  10 分別緣所生{{||。}} Vikalpa.h pratyayodbhava.h.
+  11 圓成實性{{||。}} Ni.spanna(parini.spanna).
+  12 非不見此彼{{||。}} （ヵяХтИЁЪロяХтюхвЯヤьИ）Naad.r.s.te asmin(parini.spanne)sa (paratantra-svabhaavo)d.r`syate.
+  13 三無性{{||。}} Trividhaa ni.hsvabhaavataa.
+  14 一切法無性{{||。}} Sarva-dharmaanaa^m ni.hsvabhaavataa.
+  15 相{{||。}} Lak.sa.na.
+  16 自然性{{||。}} Svaya^mbhaava.
+  17 諸法勝義{{||。}} Dharmaanaam paramaartha.
+  18 真如{{||。}} Tathataa.
+  19 當如其性故即唯識實性{{||。}} Sarvakaa'a^m tathaabhaavaat saiva vij~naptimaatrataa.
+  26 無得不思議{{||。}} Acintyo'nupalambha.h
+  27 出世間智{{||。}} Lakottara-j~naana.
+  28 捨[色-巴+鹿]重{{||。}} Dau.s.thulyahaani.
+  29 轉依{{||。}} AA`srayasya paraav.rtti.h （變住 mvp. 131）
+  30 無漏界{{||。}} Anaa`sravii dhaatu.h.
+  31 善{{||。}} Ku`sala.
+  32 常{{||。}} Dhruva.
+  33 安樂解脫身{{||。}} Sukhiivimukti-kaaya.h.
+  34 大牟尼名法{{||。}} Dharmaakhyo 'yam mahaamune.h.
+============================================================
+
+
+
+（20020520 by saywhat)
+============================================================
+{{rd修訂||old}}
+p0594  08 相{{[豸*兒]||貌}}. Li^nga. (=Lak.sa.na)
+p0639  09 如前. 偈 XX. 5 (L){{.||}}
+p0656  09 上聖. 梵. Paramaa`scarya （最希有者）{{.||}}
+============================================================
+

@@ -1,0 +1,14 @@
+T30 校勘條目 <oo> 原始檔修訂記錄（20020807 by eva）
+=============================================================
+{{修訂||old}}
+
+p0026  14 若因與果因，作因已而滅：若Ё因ヮ果Я因Ъ與л，因Ь作э已{{Ч||Ш}} Ъ滅Йд，(Hetuks.m phalasya dattva yadi hetur nirudhyate)
+p0184  09 離{{繫||繁}}, Nirgrantha.
+p0483  02 現法樂住 d.r.s.ta-dharma-sirkha-vihaara{{.||。}}
+p0483  03 下地 kaama-dhaatu{{.||。}}
+p0484  06 三因；異熟因 vipaaka-hetu, 福因 pu.nya-hetu, 知因 j~nana-hetu{{.||。}}
+p0484  07 三果；異熟果 vipaaka-phala, 福果 pu.nya-phala，知果 j~nana-phala{{.||。}}
+p0491  19 那落{{迦||伽}}世界 naraka-loka
+p0495  12 離{{繫||繁}} visa.myoga
+p0511  11 那落{{迦||伽}} naraka
+=============================================================

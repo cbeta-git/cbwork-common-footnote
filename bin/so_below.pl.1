@@ -1,0 +1,59 @@
+$vol="T01";
+$xml_root="c:/cbwork/xml";
+$out_file = "so_below.txt";
+
+# 除了 ">" 之外的 big5 字元
+my $c="(?:[\x80-\xff][\x00-\xff]|[\x00-\x3d]|[\x3f-\xff])";
+
+@note_with_star=();
+%note_text=();
+
+opendir (INDIR, "$xml_root/$vol") or die;
+@allfiles = grep(/\.xml$/i, readdir(INDIR));
+closedir INDIR;
+
+open O, ">$out_file" or die;
+select O;
+
+for $file (sort(@allfiles)){
+	do1file("$xml_root/$vol/$file");
+}
+
+close O;
+
+sub do1file {
+	my $file=shift;
+	
+	
+	$sutra='';
+	@note_with_star=();
+	%note_text=();
+	open I, $file or die;
+	while (<I>) {
+		chomp;
+		$sutra .= $_;
+	}
+	close I;
+
+	# <app> 包 <app> 的情況很難 match
+	#$sutra =~ m#(<note$d*?>.*?</note>|<app$d*?>.*?</app>)#&note($1)#eg;
+	$sutra =~ s#(<note$c*?>.*?</note>)#&rep($1)#eg;
+	foreach $n (@note_with_star) {
+		print "$n\n";
+		print $note_text{$n}, "\n";
+		print "\n";
+	}
+}
+
+sub rep {
+	$xml = shift;
+	if ($xml =~ /<note$c*?n="(\d*?)"$c*?>(.*?＊.*?)<\/note>/) {
+		$note_n = $1;
+		$note_text = $2;
+		my $i=scalar @note_with_star -1;
+		if ($note_n ne $note_with_star) {
+			push @note_with_star, $note_n;
+		}
+		$note_text{$note_n}=$note_text;
+	}
+}

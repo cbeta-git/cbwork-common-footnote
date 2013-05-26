@@ -1,0 +1,254 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+</head>
+<body>
+<textarea name=hiddentextarea style={visibility:hidden}></textarea>
+<script language="JavaScript" defer>
+/*
+	CBETA HTML Help 版, Mouse右鍵, 引用複製
+	Copyright (C) 2003 Ray Chou (ray.chou@url.com.tw), Heaven Chou
+
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License
+	as published by the Free Software Foundation; either version 2
+	of the License, or (at your option) any later version.
+
+	Written by Ray 1999/12/2 09:51AM
+	V1.0 Modify by Heaven 2001/08/07 21:57
+	V1.1 Modify by Heaven 2002/01/14 , 引用複製不用 reload 了
+	V1.2 Modify by Heaven 2002/03/04 , 針對 cd 9 新版 hh 改良, 不用一大堆經名了
+	V1.3 Modify by Heaven 2002/03/25 , 設計成可以很容易改成 gbk 版
+	V1.4 Modify by Ray 2003/1/23 11:32AM, 
+		經名改用 sutra_name 屬性, 本來用 title 屬性, mousemove 會有 popup window 干擾閱讀
+		與 cb_cite2.htm 合併, 用 cbetacit.htm?2 取代
+		加 debugMode, main() 方便 debug
+	V1.5 Modify by Ray 2003/1/27 11:29AM, cbatecit.htm?2 捉不到 location.search
+	V1.5.1 Modify by Ray 2003/5/7 11:49上午, debug 校勘版引用複製時多了一些換行
+*/
+
+//var debugMode=true;
+var debugMode=false;
+var parentwin;
+var doc;
+var sutraNum=0;
+var sutraName="";
+
+var copymode=2;	// 1: 引用複製時經名在後 2: 引用複製時經名在前
+
+var upin = "「";	// 上引號
+var downin = "」"; 	// 下引號
+var leftbook = "《";	// 左經名號
+var rightbook = "》";	// 左經名號
+
+if (!debugMode) {
+	main();
+}
+
+function main() {	
+	if (debugMode) {
+		parentwin = window;
+		doc = parentwin.document;
+	} else {
+		parentwin = external.menuArguments;
+		doc = parentwin.document;
+	}
+	/*
+	var charset = doc.all(1).innerHTML.match(/charset=gbk/i);
+	if(charset == null){
+		charset = "big5";
+	}
+	else{
+		charset = "gbk";
+		upin = "☆";	// 上引號
+		downin = "★"; 	// 下引號
+		leftbook = "▲";	// 左經名號
+		rightbook = "◎";	// 左經名號
+	}
+	*/
+	
+	var rs1 = doc.location.href.match(/(T\d{2})\d{4}[a-z]\.htm/);
+	if (rs1 != null) {
+		vol = RegExp.$1;
+	} else {
+		vol = "T??";
+	}
+		
+	var sel = doc.selection;
+	var range = sel.createRange();
+	
+	if(doc.body.cbcopy=="true") {
+		myCopy(range);
+	} else {
+		var result = doc.location.href.match(/^mk:/);
+		// 如果不是在 HTML Help 裏頭
+		if (result == null) {
+			range.execCommand("Copy");
+		} else {
+			var rs1 = doc.location.href.match(/dfb\.chm/); // 丁福保
+			var rs2 = doc.location.href.match(/combdict\.chm/); // Muller's Dictionary
+			if (rs1==null && rs2==null) myCopy(range);
+			else range.execCommand("Copy");
+		}
+	}
+}
+
+function myCopy(range)
+{
+	//開頭不能是空白, 若是空白就縮進來
+	while (escape(range.text.substr(0,1)) == "%0D") {
+		if (range.text.length>0) { range.moveStart("character",1); }
+		else { return; }
+	}
+	
+	LineStart1 = getStart(range);
+	if (LineStart1 == "") {return;}
+
+	page = LineStart1.substring(0,4);
+	page = parseInt(page,10);
+	column1 = LineStart1.substring(4,5);
+	LineStart = LineStart1.substring(5,7);
+	LineStart = parseInt(LineStart,10);
+	
+	LineEnd = getEnd(range);	
+	
+	page2 = LineEnd.substring(0,4);
+	page2 = parseInt(page2,10);
+	column2 = LineEnd.substring(4,5);
+	LineEnd = LineEnd.substring(5,7);
+	if(LineEnd == "  "){ LineEnd = ""; }		// 若取不到東西
+	else{ LineEnd = parseInt(LineEnd,10); }
+
+	if (doc.title.match(/\[<a/) != null){
+		doc.title="";		// 這樣引用複製才不會有問題
+	}
+	
+	getSutraData(range);	// 取經號及經名
+
+	temp1 = leftbook + sutraName + rightbook;
+	temp = "(CBETA, " + vol + ", no. " + sutraNum + ", p. " + page + ", " + column1 + LineStart ;
+	
+	if (page != page2) {
+		temp = temp + "~p. " + page2 + ", " + column2 + LineEnd;
+	} else if (column1 != column2) { 
+		temp = temp + "~" + column2  + LineEnd;
+	} else if (LineStart != LineEnd) { 
+		temp = temp + "~" + LineEnd;
+	}
+	temp = temp +  ")";
+
+	hiddrange=hiddentextarea.createTextRange();
+	
+	var rangeText=range.htmlText;
+	rangeText=rangeText.replace(/\n/g,"");
+	rangeText=rangeText.replace(/\x0d/g,"");
+	rangeText=rangeText.replace(/<span \x0d?class=note \x0d?id=.{8}>.*?<\/span>/gi,""); // 去掉校勘符號
+	rangeText=rangeText.replace(/<span \x0d?class=star \x0d?type="?star"?>.*?<\/span>/gi,""); // 去掉校勘符號
+	rangeText=rangeText.replace(/<tr>/gi,"\n"); // 按偈頌表格換行
+	rangeText=rangeText.replace(/<.*?>/gi,""); // 去掉標記
+	rangeText=rangeText.replace(/^\n*/,""); //  最前面不能換行
+	rangeText=rangeText.replace(/\n　　/g,"\n　"); 
+	rangeText=rangeText.replace(/(\x0d\x0a){2}/,"");
+	
+	length1 = temp1.length + rangeText.length + temp.length + 2;
+	if (copymode == 1) {
+		hiddrange.text =  upin + rangeText + downin + temp1 + temp;
+	}
+	else {
+		hiddrange.text =  temp1 + upin + rangeText + downin + temp;
+	}
+
+	hiddrange.moveStart("character",0-length1);
+	hiddrange.execCommand("SelectAll");
+	hiddrange.execCommand("Copy");
+}
+
+function getSutraData(range)
+{
+	range1 = range.duplicate();
+	if (range1.text.length > 10) {	// 加速用
+		range1.moveEnd("character",10-range1.text.length);
+	}
+	while (range1.text.length > 0) {
+		range1.moveEnd("character",-1);
+	}
+	range1.moveEnd("character",1);  // 至少要有一個字, 否則在判斷上會有麻煩
+	temp = range1.parentElement();
+	while (temp.tagName != "BODY") {
+
+		if(temp.tagName == "DIV" && temp.attributes.item("class").nodeValue == "root")
+		{
+			sutraNum = temp.attributes.item("id").nodeValue;
+			//sutraName = temp.attributes.item("title").nodeValue;
+			sutraName = temp.attributes.item("sutra_name").nodeValue;
+        	return;
+        }
+        temp = temp.parentElement;
+	}
+	return;
+}
+
+function getStart(range)
+{
+	range1 = range.duplicate();
+	if (range1.text.length > 10) {	// 加速用
+		range1.moveEnd("character",10-range1.text.length);
+	}
+	while (range1.text.length > 0) {
+		range1.moveEnd("character",-1);
+	}
+	range1.moveEnd("character",1);  // 至少要有一個字, 否則在判斷上會有麻煩
+	temp = range1.parentElement();
+	myid = temp.id;
+	while (myid.length != 7 && temp.tagName != "BODY") {
+		temp = temp.parentElement;
+		myid = temp.id;
+	}
+	
+	// 若找不到, 換另一個技巧, 調出 html 碼出來找 id
+	if (myid.length != 7) {
+		range2 = range1.duplicate();
+		range2.moveStart("character",-300);
+		htmltext = range2.htmlText;
+		arreyID = htmltext.match(/id=\d{4}[a-z]\d{2}/g);
+		IDcount = arreyID.length;
+		myid = arreyID[IDcount-1].substr(3);
+	}
+	return (myid);
+}
+
+function getEnd(range)
+{
+	range1 = range.duplicate();
+	if (range1.text.length > 10) {	// 加速用
+		range1.moveStart("character",range1.text.length-10);
+	}	
+	while (range1.text.length > 1) {
+		range1.moveStart("character",1);
+	}
+	while (range1.text.length > 0) {
+		range1.moveEnd("character",-1);
+	}
+	range1.moveEnd("character",1);  // 至少要有一個字, 否則在判斷上會有麻煩
+	temp = range1.parentElement();
+	myid = temp.id;
+	while (myid.length != 7 && temp.tagName != "BODY") {
+		temp = temp.parentElement;
+		myid = temp.id;
+	}
+	// 若找不到, 換另一個技巧, 調出 html 碼出來找 id
+	if (myid.length != 7) {
+		range2 = range1.duplicate();
+		range2.moveStart("character",-300);
+		htmltext = range2.htmlText;
+		arreyID = htmltext.match(/id=\d{4}[a-z]\d{2}/g);
+		IDcount = arreyID.length;
+		myid = arreyID[IDcount-1].substr(3);
+	}
+	if (myid == "") { myid = "       ";}
+	return (myid);
+}
+
+</script>
+</body>
+</html>

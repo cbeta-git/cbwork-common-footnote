@@ -1,0 +1,666 @@
+<html>
+<head>
+<title>校勘條目新增標記規範</title>
+<meta http-equiv="Content-Type" content="text/html; charset=big5">
+</head>
+
+<body bgcolor="#FFFFFF">
+<div align="center">
+  <p><font size="6" face="標楷體">校勘條目新增標記規範</font> </p>
+  版本資訊：$Id: note_tag.htm,v 1.7 2001/11/15 09:39:54 heaven Exp $ 
+  <p align="center">用詞說明：<font color="#FF0000">一筆</font>校勘包含一至多組校勘，每<font color="#FF0033">一組</font>校勘皆以全型逗點分隔。</p>
+  <p align="center">&nbsp;</p>
+  <table width="80%" border="2" cellspacing="0" cellpadding="5" align="center">
+    <tr bgcolor="#FFCCCC"> 
+      <td nowrap><font color="#FFFFCC"><a href="#mark1">影響<b>整筆</b>範圍的標記</a></font></td>
+    </tr>
+    <tr> 
+      <td nowrap> 
+        <p><a href="#n">&lt;n&gt; 本筆使用 &lt;note&gt; 標記</a><br>
+          <a href="#x">&lt;x&gt; 本筆使用 &lt;note&gt; 標記，並含在 &lt;todo&gt; 標記中</a><br>
+          <a href="#a">&lt;a&gt; 本筆不處理，使用 &lt;app&gt; 標記，並加上 xxxx 屬性記錄</a><br>
+          <a href="#u">&lt;u&gt; 本筆不處理，使用 &lt;tt&gt; 標記，並加上 xxxx 屬性記錄</a><br>
+          <a href="#d">&lt;d&gt; 本校勘會全部放入 desc 屬性中 </a></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFCCCC"> 
+      <td nowrap><font color="#FFFFCC"><a href="#mark2">影響<b>一組</b>範圍的標記</a></font></td>
+    </tr>
+    <tr> 
+      <td nowrap> 
+        <p><a href="#question">&lt;?&gt; 本組不處理，整筆記錄在 desc 屬性中，並使用 xxxx 註明本組沒有處理</a><br>
+          <a href="#k">&lt;k&gt; 本組是參考其它版本而自行加入的</a></p>
+        <p> <a href="#z">&lt;z&gt; 手動加入的中文之前</a><br>
+          <a href="#unknown">&lt;~&gt; 沒有前導符號的梵巴文</a><br>
+          <a href="#s">&lt;s&gt; 沒有任何前導符號的梵文</a><br>
+          <a href="#p">&lt;p&gt; 沒有任何前導符號的巴利文 </a></p>
+        <p> <a href="#m">&lt;m&gt; 單組使用 note 註解</a><br>
+          <a href="#e">&lt;e&gt; 和某經相同的註解</a><br>
+          <a href="#f">&lt;f&gt; 參考某經的註解</a><br>
+          <a href="#l">&lt;l&gt; 註解 &lt;lem&gt; 的文字</a></p>
+        <p>&lt;r&gt; 以前是 resource ，現已作廢</p>
+        </td>
+    </tr>
+    <tr bgcolor="#FFCCCC"> 
+      <td nowrap><font color="#FFFFCC"><a href="#mark3">其它</a></font></td>
+    </tr>
+    <tr> 
+      <td nowrap> 
+        <p><a href="#o">&lt;o&gt; 本標記之後的全部校勘皆放入 orig 屬性中</a><br>
+          <a href="#c">&lt;c&gt; 本標記之後的全部校勘皆放入 orig 屬性中</a><br>
+          <a href="#t">&lt;t&gt; 加在可疑文字之前</a></p>
+        <p> <a href="#corr">[A&gt;B] 勘誤的處理<br>
+          </a><a href="#comma">全型逗號 '，' 符號的處理 (當它出現在非分隔符號時)</a></p>
+        </td>
+    </tr>
+  </table>
+  <p align="center">&nbsp;</p>
+  <table width="80%" border="2" cellspacing="0" cellpadding="5" align="center">
+    <tr bgcolor="#990099"> 
+      <td nowrap><a name="mark1"></a><font color="#FFFFCC">影響<b>整筆</b>範圍的標記</font></td>
+    </tr>
+  </table>
+  <table width="80%" border="2" cellspacing="0" cellpadding="5" align="center">
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="n"></a>標記</td>
+      <td>&lt;n&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>整筆校勘條目最前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>本校勘以後不再處理，只產生 note 格式的 xml 校勘，不再加 xxxx 屬性備忘。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td>&lt;n&gt;知恩院本奧書</td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td>&lt;note n=&quot;000101&quot; place=&quot;foot&quot;&gt;知恩院本奧書&lt;/note&gt;</td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="x"></a>標記</td>
+      <td>&lt;x&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>整筆校勘條目最前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>本校勘被忽略還沒處理，並產生 note 格式的 xml 校勘，並使用 &lt;todo&gt; 標記。(以前寫：並以 xxxx 屬性備忘，這點已作廢)</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td>&lt;x&gt;此序依宋元明三本而載</td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td> 
+        <p>&lt;todo&gt;</p>
+        <blockquote> 
+          <p> &lt;note n=&quot;000101&quot; place=&quot;foot&quot;&gt;此序依宋元明三本而載&lt;/note&gt;</p>
+        </blockquote>
+        <p>&lt;/todo&gt;</p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="a"></a>標記</td>
+      <td>&lt;a&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>整筆校勘條目最前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>本校勘被忽略不處理，並產生 app 格式的 xml 校勘，並以 xxxx 屬性備忘。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td>&lt;a&gt;不分卷於此【明】</td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td> 
+        <p>&lt;app n=&quot;000101&quot; desc=&quot;&lt;a&gt;不分卷於此【明】&quot; xxxx=&quot;沒有處理的校勘&quot;&gt;</p>
+        <blockquote> 
+          <p> &lt;lem&gt;???&lt;/lem&gt;</p>
+          <p> &lt;rdg wit=&quot;【???】&quot;&gt;???&lt;/rdg&gt;</p>
+        </blockquote>
+        <p> &lt;/app&gt; </p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="u"></a>標記</td>
+      <td>&lt;u&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>整筆校勘條目最前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>本校勘被忽略不處理，並產生 tt 格式的 xml 校勘，並以 xxxx 屬性備忘。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td>&lt;u&gt;欲愛色愛無色愛～Kaamata.nhaa（欲愛）,bhavata.nhaa（有愛）,vibhavata.nhaa（無有愛） 
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td> 
+        <p>&lt;tt n=&quot;000101&quot; desc=&quot;&lt;u&gt;欲愛色愛無色愛～Kaamata.nhaa（欲愛）,bhavata.nhaa（有愛）,vibhavata.nhaa（無有愛）&quot; 
+          xxxx=&quot;沒有處理的校勘&quot;&gt;</p>
+        <blockquote> 
+          <p> &lt;term lang=&quot;zh&quot;&gt;???&lt;/term&gt;</p>
+          <p>&lt;term lang=&quot;unknown&quot;&gt;???&lt;/term&gt;</p>
+          <p>&lt;term lang=&quot;zh&quot; place=&quot;foot&quot;&gt;???&lt;/term&gt;</p>
+        </blockquote>
+        <p> &lt;/tt&gt;</p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="d"></a>標記</td>
+      <td>&lt;d&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>整筆校勘條目最前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>本校勘皆要處理，但在 desc 屬性保留本筆校勘，讓使用者瞭解。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td>&lt;d&gt;〔其衣…說〕十八字－【三】</td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td> 
+        <p>&lt;app n=&quot;000101&quot; desc=&quot;〔其衣…說〕十八字－【三】&quot; xxxx=&quot;此處自動處理…，請複查 
+          &quot;&gt;</p>
+        <blockquote> 
+          <p> &lt;lem&gt;其衣…說&lt;/lem&gt;<font color="#FF0000">(註:此處在插入 xml 經文時會自動尋找範圍)</font></p>
+          <p> &lt;rdg wit=&quot;【三】&quot;&gt;&amp;lac;&lt;/rdg&gt;</p>
+        </blockquote>
+        <p> &lt;/app&gt; </p>
+      </td>
+    </tr>
+  </table>
+  <p align="center">&nbsp;</p>
+  <table width="80%" border="2" cellspacing="0" cellpadding="5" align="center">
+    <tr bgcolor="#990099"> 
+      <td nowrap><font color="#FFFFCC"><a name="mark2"></a>影響<b>一組</b>範圍的標記</font></td>
+    </tr>
+  </table>
+  
+</div>
+<div align="left">
+<table width="80%" border="2" cellspacing="0" cellpadding="5" align="center">
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="question"></a>標記</td>
+      <td>&lt;?&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>某一組校勘條目的前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>該組校勘被忽略不處理，在 desc 屬性保留本筆校勘，並以 xxxx 屬性備忘。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td>熇＝稿【三】＊，&lt;?&gt;但熇稿交用【宋】</td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td> 
+        <p>&lt;app n=&quot;000101&quot; desc=&quot;熇＝稿【三】＊，但熇稿交用【宋】&quot; xxxx=&quot;有部份校勘沒處理 
+          &quot;&gt;</p>
+        <blockquote> 
+          <p> &lt;lem&gt;熇&lt;/lem&gt;</p>
+          <p> &lt;rdg wit=&quot;【三】＊&quot;&gt;稿&lt;/rdg&gt;</p>
+        </blockquote>
+        <p> &lt;/app&gt; </p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap bgcolor="#FFFFCC"><a name="k"></a>標記</td>
+      <td bgcolor="#FFFFCC">&lt;k&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>某一組校勘條目的前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>表示這一組是原來大正藏沒有的，是後來查出來的。若有相關的參考資料，則放在此標記後面。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p><r>博＝[十*(十/田/寸)]【宋】，&lt;k&gt;&lt;resp="CBETA.Saywhat" cf1="K20p737a13"&gt;＝[(怡-台)*(十/田/寸)]【麗】<note n="0491004" type="resource"></note></p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\"><r></gloss></skgloss> 
+        <p><skgloss n=\"${ID}a\"><term>&lt;app n=&quot;xxxxxx&quot;&gt;</term></skgloss></p>
+        <blockquote> 
+          <p>&lt;lem&gt;<skgloss n=\"${ID}a\"><term>博&lt;/lem&gt;</term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;rdg wit=&quot;【宋】&quot;&gt;[十*(十/田/寸)]&lt;/rdg&gt;</term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;rdg wit=&quot;【麗】&quot; resp="CBETA.Saywhat" 
+            cf1="K20p737a13"&gt;[(怡-台)*(十/田/寸)]&lt;/rdg&gt;</term></skgloss></p>
+        </blockquote>
+        <p>&lt;/app&gt;<skgloss n=\"${ID}a\"><term></term></skgloss></p>
+        <p><skgloss n=\"${ID}a\"><term>註：組字式在 xml 中實際上會轉成 &amp;CB 碼</term></skgloss></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="z"></a>標記</td>
+      <td>&lt;z&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>有些梵巴文字沒有中文，&lt;z&gt;就放在後來加入的中文之前。</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>有些梵巴文字沒有中文，&lt;z&gt;就放在後來加入的中文之前。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p>&lt;z&gt;瞿曇～Gotama.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;tt </gloss></skgloss> 
+        <skgloss n=\"${ID}a\"><term>n=&quot;000101&quot; type=&quot;app&quot;&gt;</term></skgloss> 
+        <blockquote> 
+          <p><skgloss n=\"${ID}a\"><term>&lt;term lang=&quot;zh&quot;&gt;瞿曇&lt;/term&gt;</term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;term lang=&quot;pali&quot;&gt;Gotama.&lt;/term&gt;</term></skgloss></p>
+        </blockquote>
+        <p><skgloss n=\"${ID}a\"><term>&lt;/tt&gt; </term></skgloss></p>
+        <p><skgloss n=\"${ID}a\"><term>註：原本應採用勘誤模式來處理 [&gt;瞿曇]，但因勘誤模式還沒有定案，故暫時如此表示</term></skgloss></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="unknown"></a>標記</td>
+      <td>&lt;~&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>沒有～符號的梵巴文字前 (適用於不確定是梵文或巴利文)</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>某些梵巴文字沒有以～符號為前導，無法由程式辨識，故加入此標記，以利處理。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p>迦葉&lt;~&gt;Kassapa.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;tt </gloss></skgloss> 
+        <skgloss n=\"${ID}a\"><term>n=&quot;000101&quot; type=&quot;app&quot;&gt;</term></skgloss> 
+        <blockquote> 
+          <p><skgloss n=\"${ID}a\"><term></term></skgloss><skgloss n=\"${ID}a\"><term>&lt;term 
+            lang=&quot;zh&quot;&gt;迦葉&lt;/term&gt;</term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;term lang=&quot;unknown&quot;&gt;Kassapa.&lt;/term&gt;</term></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+        </blockquote>
+        <p><skgloss n=\"${ID}a\"><term>&lt;/tt&gt;</term></skgloss></p>
+        <p><skgloss n=\"${ID}a\"><term>註：此例是標準的格式，尚有其它格式可應用，其它請參考&lt;s&gt;&lt;p&gt;</term></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="s"></a>標記</td>
+      <td>&lt;s&gt; or &lt;S&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>沒有任何符號的梵文前 (確定此字是梵文)</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td> 
+        <p>某些梵文沒有任何符號為前導，無法由程式辨識，故加入此標記，以利處理。</p>
+        <p> 大小寫的 &lt;S&gt; 標記在應用上並沒有差別，大寫主要是為了用在確定沒有相對應漢文的梵文中，另一支協助加入漢文的程式才不會針對 
+          &lt;S&gt; 作用。</p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p>增壹阿含&lt;s>Ekottara-AAgama～A^nguttara-Nikaaya. </p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;tt </gloss></skgloss> 
+        <skgloss n=\"${ID}a\"><term>n=&quot;000101&quot; type=&quot;app&quot;&gt;</term></skgloss> 
+        <blockquote> 
+          <p><skgloss n=\"${ID}a\"><term>&lt;term lang=&quot;zh&quot;&gt;增壹阿含&lt;/term&gt;</term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;term lang=&quot;sk&quot;&gt;Ekottara-AAgama&lt;/term&gt;</term></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;term lang=&quot;pali&quot;&gt;A^nguttara-Nikaaya.&lt;/term&gt;</term></skgloss><skgloss n=\"${ID}a\"><term> 
+            (實際上有些字會改成 &amp;xxx; 格式)</term></skgloss></p>
+        </blockquote>
+        <p><skgloss n=\"${ID}a\"><term>&lt;/tt&gt;</term></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+        <p><skgloss n=\"${ID}a\"><term>註：此例是多組梵巴文的格式，尚有其它格式可應用，其它請參考&lt;~&gt;&lt;p&gt;</term></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="p"></a>標記</td>
+      <td>&lt;p&gt; or &lt;P&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>沒有任何符號的巴利文前 (確定此字是巴利文)</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td> 
+        <p>某些巴利文沒有任何符號為前導，無法由程式辨識，故加入此標記，以利處理。</p>
+        <p> 大小寫的 &lt;P&gt; 標記在應用上並沒有差別，大寫主要是為了用在確定沒有相對應漢文的巴利文中，另一支協助加入漢文的程式才不會針對 
+          &lt;P&gt; 作用。</p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p>&lt;p>Niga.n.tha-Naatha-putta.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td> 
+        <p><skgloss n=\"${ID}a\"><term>&lt;term n=&quot;000101&quot; place=&quot;foot&quot; 
+          lang=&quot;pali&quot;&gt;Niga.n.tha-Naatha-putta.&lt;/term&gt;</term></skgloss><skgloss n=\"${ID}a\"><term> 
+          (實際上有些字會改成 &amp;xxx; 格式)</term></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+        <p><skgloss n=\"${ID}a\"><term>註：此例是沒有漢文的格式，尚有其它格式可應用，其它請參考&lt;~&gt;&lt;s&gt;</term></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="m"></a>標記</td>
+      <td>&lt;m&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>某一組校勘條目的前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>本組使用 note 註解，若本筆有 &lt;app&gt; 則緊接在 &lt;app&gt;...&lt;/app&gt; 之後</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p><r>愛＝受<note n="0491004" type="resource">【宋】【元】，&lt;m&gt;聖本有光明皇后願文</note></p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\"><r></gloss></skgloss> 
+        <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;app n=&quot;0001001a&quot;&gt;</gloss></skgloss></p>
+        <blockquote> 
+          <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;lem&gt;愛&lt;/lem&gt;</gloss></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;rdg wit=&quot;【宋】【元】&quot;&gt;受&lt;/rdg&gt;</gloss></skgloss></p>
+        </blockquote>
+        <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;/app&gt;</gloss></skgloss></p>
+        <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;note n="0001001b" place=&quot;foot&quot;&gt;聖本有光明皇后願文</gloss></skgloss>&lt;/note&gt; 
+          <skgloss n=\"${ID}a\"><term></term></skgloss></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="e"></a>標記</td>
+      <td>&lt;e&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>某一組校勘條目的前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>本組使用 note 註解，標註其和某經為 &quot;相同&quot;，若本筆有 &lt;app&gt; 則緊接在 &lt;app&gt;...&lt;/app&gt; 
+        之後</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p><r>&lt;e&gt;～S. 22. 12-14. Anicca, etc.<note n="0491004" type="resource"></note></p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\"><r>&lt;note n="0001001" place=&quot;foot&quot; 
+        type="equivalent">～</gloss></skgloss>S. 22. 12-14. Anicca, etc.&lt;/note&gt; 
+        <skgloss n=\"${ID}a\"><term></term></skgloss></td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="f"></a>標記</td>
+      <td>&lt;f&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>某一組校勘條目的前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>本組使用 note 註解，表示參考後面的資料，若本筆有 &lt;app&gt; 則緊接在 &lt;app&gt;...&lt;/app&gt; 
+        之後</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p><r>&lt;f&gt;[No. 100(266)]<note n="0491004" type="resource"></note></p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\"><r>&lt;note n="0001001" place=&quot;foot&quot; 
+        type="cf."></gloss></skgloss>[No. 100(266)]&lt;/note&gt;<skgloss n=\"${ID}a\"><term></term></skgloss></td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="l"></a>標記</td>
+      <td>&lt;l&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>某一組校勘條目的前面</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>本組使用 note 註解，但專門註解 &lt;lem&gt;後面的字</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p><r>愛＝受<note n="0491004" type="resource">【宋】【元】，&lt;l&gt;明註曰愛南藏作受</note></p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\"><r></gloss></skgloss> 
+        <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;app n=&quot;0001001a&quot;&gt;</gloss></skgloss></p>
+        <blockquote> 
+          <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;lem&gt;</gloss></skgloss></p>
+          <blockquote> 
+            <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;note n="0001001b" 
+              place=&quot;foot&quot;&gt;明註曰愛南藏作受</gloss></skgloss>&lt;/note&gt; 
+            </p>
+            <p> <skgloss n=\"${ID}a\"><gloss lang=\"pali\">愛</gloss></skgloss></p>
+          </blockquote>
+          <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;/lem&gt;</gloss></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;rdg wit=&quot;【宋】【元】&quot;&gt;受&lt;/rdg&gt;</gloss></skgloss></p>
+        </blockquote>
+        <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;/app&gt;</gloss></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+      </td>
+    </tr>
+  </table>
+  <p align="center">&nbsp;</p>
+  <table width="80%" border="2" cellspacing="0" cellpadding="5" align="center">
+    <tr bgcolor="#990099"> 
+      <td nowrap><font color="#FFFFCC"><a name="mark3"></a>其它</font></td>
+    </tr>
+  </table>
+  <table width="80%" border="2" cellspacing="0" cellpadding="5" align="center">
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="o"></a>標記</td>
+      <td>&lt;o&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>某一組的最前面，但影響範則由&lt;o&gt;直至本筆最末。</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>因為部份校勘有修正，為了保留原始資料，故將原始資料放在&lt;o&gt;之後，xml 則會將&lt;o&gt;之後的資料全部放入 orig 
+        的屬性之中。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p><r>螫＝蝎<font color="#0000FF">【宋】，</font>＝蠍【元】【明】，&lt;o&gt;螫＝蝎<font color="#FF0000">，【宋】</font>＝蠍【元】【明】<note n="0491004" type="resource"></note></p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\"><r></gloss></skgloss> 
+        <p><skgloss n=\"${ID}a\"><term>&lt;app n=&quot;xxxxxx&quot; <font color="#FF0000">orig=&quot;螫＝蝎，【宋】＝蠍【元】【明】&quot;</font>&gt;</term></skgloss></p>
+        <blockquote> 
+          <p>&lt;lem&gt;<skgloss n=\"${ID}a\"><term>螫&lt;/lem&gt;</term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;rdg wit=&quot;【宋】&quot;&gt;蝎&lt;/rdg&gt;</term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;rdg wit=&quot;【元】【明】&quot;&gt;蠍&lt;/rdg&gt;</term></skgloss></p>
+        </blockquote>
+        <p>&lt;/app&gt;<skgloss n=\"${ID}a\"><term></term></skgloss></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="c"></a>標記</td>
+      <td>&lt;c&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>某一組的最前面，但影響範則由&lt;c&gt;直至本筆最末。</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>功能和&lt;o&gt;相同，但只用在左右交換的校勘條目，這是為了日後方便尋找此類條目。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p><r>噎＝咽【明】， <o> &lt;c&gt;咽＝噎【明】<note n="0491004" type="resource"></note></p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\"><r></gloss></skgloss> 
+        <p><skgloss n=\"${ID}a\"><term>&lt;app n=&quot;xxxxxx&quot; <font color="#FF0000">orig=&quot;咽＝噎【明】&quot;</font>&gt;</term></skgloss></p>
+        <blockquote> 
+          <p>&lt;lem&gt;<skgloss n=\"${ID}a\"><term>噎&lt;/lem&gt;</term></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;rdg wit=&quot;【明】&quot;&gt;咽&lt;/rdg&gt;</term></skgloss></p>
+        </blockquote>
+        <p>&lt;/app&gt;<skgloss n=\"${ID}a\"><term></term></skgloss></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="t"></a>標記</td>
+      <td bgcolor="#FFFFCC">&lt;t&gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>插入位置</td>
+      <td>任何有疑問的字之前，不要在符號或標記之前。</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>加入&lt;t&gt;表示此處有疑問，打算在日後需再行查證，xml 則改成 &lt;todo/&gt; 標記</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p>瞿&lt;t&gt;曇～Gotama.</p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;tt </gloss></skgloss> 
+        <skgloss n=\"${ID}a\"><term>n=&quot;000101&quot; type=&quot;app&quot;&gt;</term></skgloss> 
+        <blockquote> 
+          <p><skgloss n=\"${ID}a\"><term>&lt;term lang=&quot;zh&quot;&gt;瞿&lt;todo/&gt;曇&lt;/term&gt;</term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;term lang=&quot;pali&quot;&gt;Gotama.&lt;/term&gt;</term></skgloss></p>
+        </blockquote>
+        <p><skgloss n=\"${ID}a\"><term>&lt;/tt&gt; </term></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="corr"></a>勘誤</td>
+      <td bgcolor="#FFFFCC">[Ａ&gt;Ｂ]&lt;resp=&quot;CBETA.xxx&quot; cf=&quot;xxxx&quot; 
+        .... &gt;</td>
+    </tr>
+    <tr> 
+      <td nowrap>位置</td>
+      <td>任何要勘誤的字。若有 resp 及相關的標記，則緊鄰在其後，resp 是必需的屬性。</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>校勘之中勘誤，採用 corr 模式，並加上 place=&quot;foot&quot;，以便和一般 corr 區別。</td>
+    </tr>
+    <tr> 
+      <td nowrap>範例</td>
+      <td> 
+        <p>貪欲延＝食福[輕&gt;經]&lt;resp="CBETA.Maha"&gt;【三】</p>
+      </td>
+    </tr>
+    <tr> 
+      <td nowrap>產生的ＸＭＬ格式</td>
+      <td> 
+        <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;app n=&quot;xxxxxx&quot;&gt;</gloss></skgloss></p>
+        <blockquote> 
+          <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;lem&gt;貪欲延&lt;/lem&gt;</gloss></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;rdg wit=&quot;【三】&quot;&gt;食福&lt;corr 
+            sic=&quot;輕&quot; place=&quot;foot&quot; resp="CBETA.Maha"&gt;經&lt;/corr&gt;&lt;/rdg&gt;</gloss></skgloss></p>
+        </blockquote>
+        <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">&lt;/app&gt;</gloss></skgloss><skgloss n=\"${ID}a\"><term></term></skgloss></p>
+        <p><skgloss n=\"${ID}a\"><term>註：若是”貪欲延”這三字有錯，則採用 &lt;o&gt; 標記來處理</term></skgloss></p>
+        <p><skgloss n=\"${ID}a\"><term><font color="#FF0000">貧</font>欲延＝食福經【三】，&lt;o&gt;貪欲延＝食福經【三】</term></skgloss></p>
+      </td>
+    </tr>
+    <tr bgcolor="#FFFFCC" bordercolor="#999900"> 
+      <td nowrap><a name="comma"></a>全型逗號</td>
+      <td bgcolor="#FFFFCC">非使用在分隔各組校勘的全型逗號處理方式</td>
+    </tr>
+    <tr> 
+      <td nowrap>說明</td>
+      <td>全型逗號的作用為分隔各組校勘，若有其它地方也出弄逗號，則要額外處理。</td>
+    </tr>
+    <tr> 
+      <td nowrap>實例</td>
+      <td> 
+        <p><skgloss n=\"${ID}a\"><gloss lang=\"pali\">任何非分隔各組用的全型逗號</gloss></skgloss><skgloss n=\"${ID}a\"><term>，請將逗號（，）改成半型加標記的逗號（&lt;,&gt;），程式在處堙時會自動還原全型逗號。</term></skgloss></p>
+        <p><skgloss n=\"${ID}a\"><term>＜原來的＞穰＝禳【宋】【元】，【明】【宮】【乙】＊<br>
+          ＜修正後＞穰＝禳【宋】【元】&lt;,&gt;【明】【宮】【乙】＊ </term></skgloss></p>
+        <p><skgloss n=\"${ID}a\"><term>&lt;app n=&quot;xxxxxx&quot;&gt;</term></skgloss></p>
+        <blockquote> 
+          <p><skgloss n=\"${ID}a\"><term>&lt;lem&gt;穰&lt;/lem&gt;</term></skgloss></p>
+          <p><skgloss n=\"${ID}a\"><term>&lt;rdg wit=&quot;【宋】【元】，【明】【宮】【乙】＊ &quot;&gt;禳&lt;/rdg&gt;</term></skgloss></p>
+        </blockquote>
+        <p><skgloss n=\"${ID}a\"><term>&lt;/app&gt;</term></skgloss></p>
+      </td>
+    </tr>
+  </table>
+  <hr>
+</div>
+</body>
+</html>

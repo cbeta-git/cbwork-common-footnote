@@ -1,0 +1,478 @@
+#
+# so_below.pl
+# 校勘＊自動處理
+# 2003/2/25 03:13PM by Ray
+# v 0.1, 2003/3/10 04:50PM 解決校勘內容跨行問題, by Ray
+# v 0.11, 2003/3/13 02:52PM by Ray
+# v 0.12, 2003/3/13 03:03PM by Ray
+# v 0.13, 2003/3/13 03:20PM by Ray
+# v 0.14, 2003/3/13 03:36PM by Ray
+# v 0.15, 2003/3/18 03:06PM by Ray
+# v 0.16, 2003/3/20 03:43PM by Ray
+# v 0.17, 2003/3/27 04:41PM by Ray
+# v 0.18, 2003/4/2 10:53AM by Ray
+
+require "so_below.cfg";
+
+$vol=shift;
+$vol=uc($vol);
+
+
+opendir (INDIR, "$in_dir/$vol") or die;
+@allfiles = grep(/\.xml$/i, readdir(INDIR));
+closedir INDIR;
+
+die "No files to process\n" unless @allfiles;
+print STDERR "Initialising....\n";
+
+#utf8 pattern
+$pattern = '[\xe0-\xef][\x80-\xbf][\x80-\xbf]|[\xc2-\xdf][\x80-\xbf]|[\x0-\x7f]|&[^;]*;|\<[^\>]*\>';
+my $big5 = "(?:[\x00-\x7f]|[\x80-\xff][\x00-\xff])";
+
+($path, $name) = split(/\//, $0);
+push (@INC, $path);
+push (@INC, "c:/cbwork/work/bin");
+
+require "utf8b5o.plx";
+require "sub.pl";
+$utf8out{"\xe2\x97\x8e"} = '';
+
+use XML::Parser;
+       
+my $parser = new XML::Parser(NoExpand => True);        
+        
+$parser->setHandlers(
+	Init => \&init_handler,
+	Start => \&start_handler,
+	End => \&end_handler,
+	Char  => \&char_handler,
+	Entity => \&entity,
+	Default => \&default,
+	Final => \&final
+);
+
+open LOG, ">$log_dir/star_$vol.txt" or die;
+open LOGB, ">$log_dir/star_${vol}b.txt" or die;
+open LOGC, ">$log_dir/star_${vol}c.txt" or die;
+for $file (sort(@allfiles)) { 
+	print LOGB "$file\n";
+	process1file($file);
+}
+close LOG;
+close LOGB;
+
+print STDERR "完成!!\n";
+        
+sub process1file {
+	$file = shift;
+	$file =~ s/^t/T/;
+	print STDERR "$file\n";
+	$parser->parsefile("$in_dir/$vol/$file");
+}
+
+#-------------------------------------------------------------------
+# 讀 ent 檔存入 %Entities
+sub openent{
+	local($file) = $_[0];
+	#print STDERR "開啟 Entity 定義檔: $file\n";
+	if ($file=~/\.gif$/) {
+		return;
+	}
+	open(T, "$in_dir/$vol/$file") || die "can't open $file\n";
+	while(<T>){
+		chop;
+		s/<!ENTITY\s+//;
+		s/[SC]DATA//;
+		  s/\s+>$//;
+		  ($ent, $val) = split(/\s+/);
+		  $val =~ s/"//g;
+		$Entities{$ent} = $ent;
+		#print STDERR "Entity: $ent -> $ent\n";
+  }
+}       
+        
+        
+sub default {
+    my $p = shift;
+    my $string = shift;
+	$string =~ s/^&(.+);$/$1/;
+	if ( defined($Entities{$string}) ) { 
+		my $s="&$string;";
+		text_handler($s);
+	}
+}
+        
+sub init_handler
+{       
+	my $s = $file;
+	print LOG "$s 開始....\n";
+	$s =~ s/\.xml/\.ent/;
+	#print <<"EOD";
+#<?xml version="1.0" encoding="big5" ?>
+#<?xml:stylesheet type="text/xsl" href="../dtd/cbeta.xsl" ?>
+#<!DOCTYPE tei.2 SYSTEM "../dtd/cbetaxml.dtd"
+#[<!ENTITY % ENTY  SYSTEM "$s" >
+#<!ENTITY % CBENT  SYSTEM "../dtd/cbeta.ent" >
+#%ENTY;
+#%CBENT;
+#]>
+#EOD
+	%app_xml=();
+	@apps=();
+	$buf='';
+	$ifStarAtThisLine=0;
+	%lem=();
+	@lems=();
+	%match=();
+	%note_juan=();
+	@note_with_star=();
+	%note_text=();
+	$note_type="";
+	$pass=1;
+	@pass=();
+}
+
+
+
+sub start_handler 
+{       
+	my $p = shift;
+	$el = shift;
+	my %att = @_;
+	push @saveatt , { %att };
+	push @elements, $el;
+	push @pass, $pass;
+	my $parent = lc($p->current_element);
+
+	# <anchor>
+	if ($el eq "anchor") {
+		if ($att{"id"}=~/^fx/) {
+			search_star();
+			$anchorID=$att{"id"};
+			$lb_of_star{$anchorID}=$lb;
+			$buf = "<anchor>";
+			print LOG "$lb 出現＊ id=$anchorID\n";
+			#print LOG "上一條有＊的校勘是";
+			$i=scalar @note_with_star-1;
+			#print LOG $note_with_star[$i], "\n";
+			$ifStarAtThisLine=1;
+			$text_in_line{$lb} .= "[＊]";
+		}
+	}
+
+	# <app>
+	if ($el eq "app") {
+		$appN = $att{"n"};
+		push @apps, $appN;
+	}
+	
+	# <figure>
+	if ($el eq "figure") {
+		text_handler(uc($att{"entity"}));
+	}
+	
+	# <lb>
+	if ($el eq "lb") {
+		$lb=$att{"n"};
+		$text_in_line{$lb}='';
+		$ifStarAtThisLine=0;
+	}
+
+	# <lem>
+	if ($el eq "lem") {
+		$lem{$appN}='';
+		push @lems, $appN;
+	}
+	
+	# <milestone>
+	if ($el eq "milestone") {
+		if ($att{"unit"} eq "juan") {
+			$juan=$att{"n"};
+		}
+	}
+	
+	# <note>
+	if ($el eq "note") {
+		$note_type = $att{"type"};
+		$note_n = $att{"n"};
+		$note_juan{$note_n}=$juan;
+		if ($note_type =~ /^orig|mod$/) {
+			$note_text{$note_n}='';
+			search_star();
+			$pass=0;
+		}
+	}
+
+	# <rdg>
+	if ($el eq "rdg") {
+		$pass=0;
+	}
+	
+	# <todo>
+	if ($el eq "todo") {
+		text_handler("<todo>");
+	}
+
+	my $x="<$el";
+	while (($key,$value) = each %att) {
+		$value = myDecode($value);
+		$x .= " $key=\"$value\"";
+	}
+	if ($el=~/^(lb|pb|figure)$/) { $x .= "/"; }
+	$x .= ">";
+	#print $x;
+	add_app_xml($x);
+}
+
+sub rep{
+	local($x) = $_[0];
+	return $x;
+}       
+        
+
+sub end_handler 
+{       
+	my $p = shift;
+	my $el = shift;
+	my $att = pop(@saveatt);
+	pop @elements;
+	my $parent = lc($p->current_element);
+	if ($el!~/^(lb|pb|figure)$/) { 
+		#print "</$el>"; 
+		add_app_xml("</$el>");
+	}
+
+	# </app>
+	if ($el eq "app") {
+		pop @apps;
+	}
+
+	# </lem>
+	if ($el eq "lem") {
+		pop @lems;
+	}
+	
+	# </note>
+	if ($el eq "note") {
+		if ($note_type =~ /^orig|mod$/) {
+			if ($note_text{$note_n} =~ /^$big5*＊/) {
+				print LOG "校勘 [$note_n] ", $note_text{$note_n}, "\n";
+				print LOG "\n";
+				$i=scalar @note_with_star;
+				if ($note_with_star[$i-1] ne $note_n) {
+					push @note_with_star, $note_n;
+					$match{$note_n}=0;
+				}
+			} else {
+				#print LOG "無＊的校勘 [$note_n] ", $note_text{$note_n}, "\n";
+			}
+		}
+		$note_type="";
+	}
+	$pass=pop @pass;
+}
+        
+        
+sub char_handler 
+{       
+	my $p = shift;
+	my $char = shift;
+	my $parent = lc($p->current_element);
+        
+	$char =~ s/($pattern)/$utf8out{$1}/g;
+	
+	text_handler($char);
+}
+
+sub text_handler {
+	my $c=shift;
+	#print $c;
+	if ($note_type =~ /^orig|mod$/) {
+		$note_text{$note_n} .= $c;
+	}
+	if ($pass) {
+		$text_in_line{$lb} .= $c;
+	}
+	
+	add_app_xml($c);
+	
+	$c =~ s/\n$//;
+	my $n;
+	foreach $n (@lems) {
+		$lem{$n} .= $c;
+	}	
+	$buf .= $c;
+}
+
+sub add_app_xml {
+	$s=shift;
+	foreach $n (@apps) {
+		$app_xml{$n} .= $s;
+	}
+}
+
+sub entity{
+	my $p = shift;
+	my $ent = shift;
+	my $entval = shift;
+	my $next = shift;
+	&openent($next);
+	return 1;
+}       
+        
+
+sub final {
+	if ($anchorID ne '') {
+		search_star();
+	}
+	my $first=1;
+	foreach $n (sort keys %match) {
+		if ($match{$n}==0) {
+			if ($first) {
+				print LOG "$file 含＊的校勘條目但內文中無對應的＊:\n";
+				$first=0;
+			}
+			print LOG "$n\n";
+			print LOGC "$file $n\n";
+		}
+	}
+	print LOG "\n";
+}
+
+sub myDecode {
+	my $s = shift;
+	$s =~ s/($pattern)/$utf8out{$1}/g;
+	return $s;
+}
+
+sub search_star {
+	# 除了 】 之外的中文字
+	my $c="(?:[\x80-\xa0][\x00-\xff]|\xa1[\x00-\x69]|\xa1[\x6b-\xff]|[\xa2-\xff][\x00-\xff])";
+	
+	if ($buf !~ /<anchor>/) {
+		$buf='';
+		return;
+	}
+	
+	$i=$lb_of_star{$anchorID};
+	my $s=$text_in_line{$i};
+	$s=~s/\n$//;
+	print LOG "本文：$s\n";
+	print LOG "搜尋 <anchor id='$anchorID'> 的對應校勘....\n";
+	for($i=scalar @note_with_star-1; $i>=0; $i--) {
+		$n=$note_with_star[$i];
+		$t=$lem{$n};
+		#print LOG "text in lem($n)=$t\n";
+		if ($t ne '' and $buf=~/<anchor>\Q$t\E/) {
+			$jk = $note_text{$n};
+			if ($juan ne $note_juan{$n}) {
+				print LOG "在另一卷";
+			}
+			print LOG "找到對應的校勘:[$n] $jk\n";
+			if ($jk =~ /<todo>/) {
+				print LOG "校勘中有 <todo> 不處理\n\n";
+				last;
+			}
+			$match{$n}++; # 記錄本條校勘有被使用到
+			if (exists $app_xml{$n}) {
+				$vers='';
+				$jk=~s/下同/＊/g;
+				@tokens=split /，/, $jk;
+				$jk='';
+				foreach $token (@tokens) {
+					#print LOG "349 $token\n";
+					# 如果最後是＊
+					if ($token=~/＊$/) {
+						if ($token =~ /&M062403;/ and $token =~ /&M062303;/) {
+							$token = "【？】＊【Ａ】＊【Ｂ】＊";
+						} elsif ($token =~ /&M062403;/) {
+							$token = "【？】＊【Ａ】＊";
+						} elsif ($token =~ /&M062303;/) {
+							$token = "【？】＊【Ｂ】＊";
+						} elsif ($token!~/＊.*＊/) { # 前面又沒有夾雜＊
+							#$s=~s/(【$c*?】)/$1＊/g; # 那就每個版本都算有＊
+							$token=~s/】【/】＊【/g; # 那就每個版本都算有＊
+						}
+					}
+					$jk .= $token;
+				}
+				#print LOG "362 $jk\n";
+				$jk =~ s/(【$c*?】)＊/&ver($1)/ge;
+				if ($vers eq '') {
+					print LOG "沒有符合的版本\n";
+				} else {
+					print LOG "符合的版本", $vers, "\n";
+					print LOG "對應的 app:\n";
+					$xml=$app_xml{$n};
+					$xml=~s/FIGT\d{8}//g;
+					print LOG $xml, "\n";
+					print LOG "過濾後的 app:\n";
+					$xml=filter_rdg($xml);
+					$xml =~ s#<anchor id="fxT\d\dp\d{4}.\d\d"></anchor>##g;
+					print LOG "$xml\n";
+					print LOGB "$anchorID##$xml\n";
+				}
+			} else {
+				print LOG "找不到 app\n";
+			}
+			print LOG "\n";
+			last;
+		} else {
+			# 例 <anchor id="fxT08p0281b01"> ＊的文字範圍包校勘符號
+			$t = "<anchor>" . $t;
+			if ($t =~ /\Q$buf\E/) {
+				$jk = $note_text{$n};
+				print LOG "找到可能對應的校勘:[$n] $jk\n";
+				print LOG "請查證\n\n";
+				last;
+			}
+		}
+	}
+	if ($i==-1) {
+		print LOG "Error: 找不到對應的校勘\n\n";
+	}
+	$buf='';
+	$anchorID='';
+}
+
+sub ver {
+	my $s=shift;
+	$vers .= $s;
+}
+
+sub filter_rdg {
+	my $x=shift;
+	$x =~ s/\n//g;
+	$x =~ s/(<rdg.*?wit=")(.*?)(".*?>.*?<\/rdg>)/&rep1($1,$2,$3)/ge;
+	$x =~ s/<lb.*?\/>//g;
+	$x =~ s/(<app[^>]*?)n(=".*?">)/$1type="＊" source$2/;
+	#print LOG "333 $x\n";
+	return $x;
+}
+
+sub rep1 {
+	my $before=shift;
+	my $wit=shift;
+	my $after=shift;
+	#print LOG "340 $before$wit$after\n";
+	$wit =~ s/(【.*?】)/&rep2($1)/ge;
+	#print LOG "342 $wit\n";
+	if ($wit eq '') {
+		return '';
+	} else {
+		return $before . $wit . $after;
+	}
+}
+
+sub rep2 {
+	my $s=shift;
+	#print LOG "351 $s\n";
+	if ($vers =~ /\Q$s\E/) {
+		return $s;
+	} else {
+		return '';
+	}
+}
+        
+__END__ 
+:endofperl

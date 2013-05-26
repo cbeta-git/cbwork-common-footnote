@@ -1,0 +1,148 @@
+#
+# nkr_note.pl
+# 校勘符號應該在 <note> 裏面的, 自動移位
+#
+# v 0.1, 2002/10/8 10:41AM, by Ray
+#
+
+$out_dir = "d:/temp";  # 新 XML 檔 的輸出目錄
+
+$debug=0;
+$big5 = '[\x00-\x7f]|[\x80-\xff][\x00-\xff]';
+
+$xml_sutra_no = "#";
+$xml_text;
+$dirty=0;
+
+for ($i=1; $i<=85; $i++) {
+	$vol = "T" . sprintf("%2.2d",$i);
+	$simple = "c:/cbwork/simple/$vol/new.txt";
+	$jk = "c:/cbwork/work/footnote/footnotedone/${vol}校勘條目.txt";
+	if (not -e $simple) { next; }
+	if (not -e $jk) { next; }
+	print STDERR "$vol\n";
+	do1vol($vol);
+}
+
+sub do1vol {
+	open S, $simple or die;
+	open JK, $jk or die "cannot open $jk";
+	$jk_pb="#";
+	while (<S>) {
+		chomp;
+		s/\[.*?>>(.*?)\]/$1/eg;
+		# 如果校勘符號後緊跟著小括號
+		if (/T\d\dn(\d{4})_p(\d{4})(.\d\d).*?\[(\d{2,3})\]\((.*?)(\))?/) {
+			$simple_text=$_;
+			$simple_sutra_no = $1;
+			$pb=$2;
+			$lb=$3;
+			$n=$4;			
+			$note_text = $5;
+			
+			#print "note_text=$note_text\n";
+			
+			if ( ($simple_sutra_no ne $xml_sutra_no) and $dirty) {
+				$dirty=0;
+				print_xml();
+			}
+			
+			if ($debug) { print "25 $pb$lb [$n]\n"; }			
+			do1line();
+		}
+	}
+}
+
+sub open_xml {
+	$xml_sutra_no = $simple_sutra_no;
+	open XML, "c:/cbwork/xml/$vol/${vol}n$xml_sutra_no.xml" or die;
+	$xml_text="";
+	while (<XML>) {
+		$xml_text .= $_;
+	}
+	close XML;
+}
+
+sub print_xml {
+	mkdir("$out_dir/$vol", MODE);
+	$f = ">$out_dir/$vol/${vol}n$xml_sutra_no.xml";
+	open XML, $f or die "cannot open $f\n";
+	print XML $xml_text;
+	close XML;
+}
+
+sub do1line {
+	# 找到校勘條目中對應的頁數
+	while($jk_pb ne $pb) {
+		if ($s=<JK>) {
+			if ($s=~/^p(\d{4})/) {
+				$jk_pb = $1;
+				if ($debug) { print "46 jk=$s\n"; }
+			} else {
+				#if ($debug) { print "jk=$_ "; }
+			}
+		} else {
+			last;
+		}
+	}
+	if ($debug) { print "jk_pb=$jk_pb\n"; }
+	while (<JK>) {
+		chomp;
+		$s=$_;
+		if(/^  (\d{2,3})/) {	# 找到對應的校勘條目
+			$jk_n=$1;
+			if ($jk_n eq $n) {
+				if ($debug) {
+					print STDERR "jk_n=$jk_n ";
+					print STDERR "$s ";
+				}
+
+				# 有減號的不移
+				if ($s =~/^($big5)*－/) {
+					last;
+				}
+				
+				# 校勘文字中有半形括號括住整個 <note> 文字的不移
+				if ($s=~/\(\Q$note_text\E\)/) {
+					last;
+				}
+				
+				# 校勘文字中有全形括號括住整個 <note> 文字的不移
+				if ($s=~/\Q（$note_text）\E/) {
+					last;
+				}
+				
+				# 校勘文字中 等號左邊的文字如果比 <note> 內的文字還長就不移
+				if ($s=~/\Q$note_text\E.+＝/) {
+					last;
+				}
+				
+				# 如果校勘條目是作「A＋（B）本文」的，校勘數字也不用移位。
+				if ($s=~/.+?\Q＋（\E.+?\Q）本文\E/) {
+					last;
+				}
+				
+				if ($s=~/^($big5)*＋/ or $s=~/^($big5)*＝/) {
+					print "$s\n";
+					print "夾註內文字: $note_text\n";
+					print "$simple_text\n";
+					$simple_text =~ s/(\[\d{2,3}\])(\()/$2$1/;
+					print "$simple_text\n";
+					if ($xml_sutra_no ne $simple_sutra_no) {
+						open_xml();
+					}
+					$xml_text =~ m#(<lb n="$pb$lb"/>.*?(<lb|\n))#;
+					print $1;
+					$xml_text =~ s#(<anchor id="fn${vol}p${pb}[a-z]$n"/>)(<note place="inline">)#$2$1#;
+					$xml_text =~ m#(<lb n="$pb$lb"/>.*?(<lb|\n))#;
+					print $1;
+					$dirty=1;
+					print "\n";
+				}
+				last;
+			}
+		} else {
+			if ($debug) { print "55 $s\n"; }
+		}
+	}
+}	
